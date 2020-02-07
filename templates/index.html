@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-mobile is-centered">
+      <div class="column is-half">
+        <p class="bd-notification is-primary">
+        <div class="columns is-vcentered">
+          <div class="column is-half has-text-centered">
+            <p>Administrar <strong>Empleados</strong></p>
+          </div>
+          {% with messages=get_flashed_messages() %}
+          <div class="column has-text-centered">
+            {% if messages %}
+              {% for message in messages %}
+                 {{message}}
+              {% endfor %}
+            {% endif %}
+
+          </div>
+          {% endwith %}
+          <div class="column has-text-centered">
+            <button class="button is-dark" id="newBtn" >Agregar Empleado</button>
+          </div>
+        </div>
+        </p>
+      </div>
+    </div>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      {% for row in employees%}
+      <tr>
+        <td>{{row.id}}</td>
+        <td id="{{row.id}}-name" >{{row.name}}</td>
+        <td id="{{row.id}}-email" >{{row.email}}</td>
+        <td id="{{row.id}}-phone" >{{row.phone}}</td>
+        <td>
+          <button id="edit-{{row.id}}" class="button is-info editBtn">Edit</button>
+          <button id="delete-{{row.id}}" class="button is-danger deleteBtn">Delete</button>
+
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+<div id="deleteModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card" >
+    <header class="modal-card-head">
+      <p class="modal-card-title">Delete employee</p>
+      <button class="delete modal-cancel" aria-label="close"></button>
+    </header>
+    <form action="/delete" id="deleteForm" method="POST">
+      <footer class="modal-card-foot">
+        <button class="button is-success" type="submit">Confirm</button>
+        <button class="button modal-cancel">Cancel</button>
+      </footer>
+    </form>
+  </div>
+</div>
+<div id="formModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card" >
+    <header class="modal-card-head">
+      <p id="formModalTitle" class="modal-card-title">Add new employee</p>
+      <button class="delete modal-cancel" aria-label="close"></button>
+    </header>
+    <form action="/insert" id="newForm" method="POST" class="has-background-light">
+      <input class="input" name="id" type="hidden">
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label">Name</label>
+          <div class="control">
+            <input class="input" name="name" type="text" minlength="4" maxlength="15"  placeholder="Text input" required="1">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Email</label>
+          <div class="control has-icons-left">
+            <input class="input" name="email" type="email" placeholder="hello@" required="1">
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Phone</label>
+          <div class="control">
+            <input class="input" name="phone" type="number" min="10" placeholder="55.." required="1">
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success" type="submit">Save changes</button>
+        <button class="button modal-cancel">Cancel</button>
+      </footer>
+    </form>
+  </div>
+</div>
+{% endblock %}
